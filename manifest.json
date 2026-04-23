@@ -1,6 +1,12 @@
 {
-  "name": "Teste",
+  "name": "Extensão Teste",
   "version": "1.0.0",
   "manifest_version": 1,
-  "author": "DemonRider"
+  "author": "DemonRider",
+  "icon": "Imagens/T20-icon.png",
+  "action": {
+    "title": "Abrir Teste",
+    "icon": "Imagens/T20-icon.png",
+    "popover": "index.html"
+  }
 }
