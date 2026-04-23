@@ -1,11 +1,17 @@
-body {
-  font-family: Arial;
+html, body {
+  font-family: Arial, sans-serif;
   padding: 15px;
   margin: 0;
   background: rgba(30, 30, 30, 0.4);
   color: white;
-  min-width: 350px;
-  min-height: 500px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 button {
@@ -14,9 +20,14 @@ button {
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: stretch;
-    justify-content: start;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
