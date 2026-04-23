@@ -9,14 +9,5 @@
     "title": "Abrir Teste",
     "icon": "https://demonrider0.github.io/extensao-obr/imagens/t20-icon.png",
     "popover": "https://demonrider0.github.io/extensao-obr/index.html"
-  },
-
-  "panels": [
-    {
-      "id": "painel-principal",
-      "title": "Extensão Teste",
-      "icon": "https://demonrider0.github.io/extensao-obr/imagens/t20-icon.png",
-      "content": "https://demonrider0.github.io/extensao-obr/index.html"
-    }
-  ]
+  }
 }
