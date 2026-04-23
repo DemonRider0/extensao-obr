@@ -1,40 +1,46 @@
 import OBR from "https://cdn.jsdelivr.net/npm/@owlbear-rodeo/sdk/+esm";
 
+let flipMode = false;
+
 OBR.onReady(async () => {
-  console.log("Flip Tool carregado");
+  console.log("Extensão carregada");
 
-  OBR.tool.onToolChange(async (tool) => {
-    if (tool !== "flip-token") return;
+  const btn = document.getElementById("btn");
 
-    try {
-      const selectedItems = await OBR.scene.items.getItems(
-        (item) => item.selected
-      );
+  btn.addEventListener("click", async () => {
+    flipMode = !flipMode;
 
-      if (!selectedItems.length) {
-        await OBR.notification.show("Selecione um token primeiro.");
-        return;
-      }
+    btn.textContent = flipMode ? "🟢 Flip ON" : "🔴 Flip OFF";
 
-      await OBR.scene.items.updateItems(
-        selectedItems.map(i => i.id),
-        (items) => {
-          for (const item of items) {
-            
-            // garante transform
-            item.scale = item.scale || { x: 1, y: 1 };
+    await OBR.notification.show(
+      flipMode ? "Modo Flip ativado" : "Modo Flip desativado"
+    );
+  });
 
-            // flip horizontal
-            item.scale.x = item.scale.x * -1;
-          }
-        }
-      );
+  // escuta clique no mapa (SEU "tool system")
+  OBR.scene.onPointerDown?.(async (event) => {
+    if (!flipMode) return;
 
-      await OBR.notification.show("Token flipado!");
+    const selectedItems = await OBR.scene.items.getItems(
+      (item) => item.selected
+    );
 
-    } catch (err) {
-      console.error(err);
-      await OBR.notification.show("Erro ao flipar token.");
-    }
+    if (!selectedItems.length) return;
+
+    await flipItems(selectedItems);
   });
 });
+
+async function flipItems(items) {
+  await OBR.scene.items.updateItems(
+    items.map(i => i.id),
+    (items) => {
+      for (const item of items) {
+        item.scale = item.scale || { x: 1, y: 1 };
+        item.scale.x *= -1;
+      }
+    }
+  );
+
+  await OBR.notification.show("Flip realizado!");
+}
