@@ -1,10 +1,10 @@
 {
-  "name": "Extensão Flip Token",
+  "name": "Extensão Teste",
   "version": "1.0.0",
   "manifest_version": 1,
   "author": "DemonRider",
   "action": {
-    "title": "Flip Token",
+    "title": "Abrir Teste",
     "icon": "https://demonrider0.github.io/extensao-obr/imagens/t20-icon.png",
     "popover": "https://demonrider0.github.io/extensao-obr/",
     "height": 540,
