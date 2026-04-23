@@ -1,3 +1,5 @@
+import OBR from "https://unpkg.com/@owlbear-rodeo/sdk?module";
+
 OBR.onReady(() => {
   console.log("Extensão carregada!");
 
