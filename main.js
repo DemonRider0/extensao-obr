@@ -3,33 +3,33 @@ import OBR from "https://cdn.jsdelivr.net/npm/@owlbear-rodeo/sdk/+esm";
 const FRONT_IMAGE = "https://demonrider0.github.io/extensao-obr/imagens/moeda-front.png";
 const BACK_IMAGE = "https://demonrider0.github.io/extensao-obr/imagens/moeda_verso.png";
 
+let currentSelection = [];
+
 OBR.onReady(async () => {
   console.log("Extensão carregada!");
 
-  await OBR.notification.show("Selecione um item e pressione R");
+  // escuta seleção em tempo real
+  OBR.scene.items.onChange((items) => {
+    currentSelection = items.filter((item) => item.selected);
+  });
 
-  window.addEventListener("keydown", async (event) => {
-    if (event.key.toLowerCase() !== "r") return;
+  await OBR.notification.show("Extensão pronta!");
 
+  const btn = document.getElementById("btn");
+
+  btn.addEventListener("click", async () => {
     try {
-      const selectedItems = await OBR.scene.items.getItems(
-        (item) => item.selected
-      );
-
-      if (!selectedItems.length) {
+      if (!currentSelection.length) {
         await OBR.notification.show("Nenhum item selecionado.");
         return;
       }
 
-      const item = selectedItems[0];
+      const item = currentSelection[0];
 
-      // Detecta lado atual pela imagem
       const currentImage = item.image?.url || "";
-
       const nextImage =
         currentImage === FRONT_IMAGE ? BACK_IMAGE : FRONT_IMAGE;
 
-      // Atualiza item
       await OBR.scene.items.updateItems([item.id], (items) => {
         for (let i of items) {
           i.image.url = nextImage;
@@ -38,8 +38,8 @@ OBR.onReady(async () => {
 
       await OBR.notification.show("Flip realizado!");
 
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       await OBR.notification.show("Erro ao flipar item.");
     }
   });
