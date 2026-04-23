@@ -6,10 +6,10 @@ const BACK_IMAGE = "https://demonrider0.github.io/extensao-obr/imagens/moeda_ver
 OBR.onReady(async () => {
   console.log("Extensão carregada!");
 
-  await OBR.notification.show("Selecione um item e pressione F");
+  await OBR.notification.show("Selecione um item e pressione R");
 
   window.addEventListener("keydown", async (event) => {
-    if (event.key.toLowerCase() !== "f") return;
+    if (event.key.toLowerCase() !== "r") return;
 
     try {
       const selectedItems = await OBR.scene.items.getItems(
