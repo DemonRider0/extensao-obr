@@ -1,12 +1,8 @@
 import OBR from "https://cdn.jsdelivr.net/npm/@owlbear-rodeo/sdk/+esm";
 
-const FRONT_IMAGE = "https://demonrider0.github.io/extensao-obr/imagens/moeda-front.png";
-const BACK_IMAGE = "https://demonrider0.github.io/extensao-obr/imagens/moeda_verso.png";
-
 OBR.onReady(async () => {
-  console.log("Flip Tool ativo");
+  console.log("Flip Tool carregado");
 
-  // Quando a ferramenta for ativada
   OBR.tool.onToolChange(async (tool) => {
     if (tool !== "flip-token") return;
 
@@ -20,20 +16,21 @@ OBR.onReady(async () => {
         return;
       }
 
-      for (const item of selectedItems) {
-        const currentImage = item.image?.url || "";
+      await OBR.scene.items.updateItems(
+        selectedItems.map(i => i.id),
+        (items) => {
+          for (const item of items) {
+            
+            // garante transform
+            item.scale = item.scale || { x: 1, y: 1 };
 
-        const nextImage =
-          currentImage === FRONT_IMAGE ? BACK_IMAGE : FRONT_IMAGE;
-
-        await OBR.scene.items.updateItems([item.id], (items) => {
-          for (let i of items) {
-            i.image.url = nextImage;
+            // flip horizontal
+            item.scale.x = item.scale.x * -1;
           }
-        });
-      }
+        }
+      );
 
-      await OBR.notification.show("Flip realizado!");
+      await OBR.notification.show("Token flipado!");
 
     } catch (err) {
       console.error(err);
