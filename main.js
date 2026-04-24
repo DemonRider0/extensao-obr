@@ -8,6 +8,8 @@ const saveBtn = document.getElementById("saveBtn");
 const flipBtn = document.getElementById("flipBtn");
 const statusText = document.getElementById("status");
 
+alert("main.js abriu");
+
 window.onload = () => {
   document.getElementById("testeBtn").addEventListener("click", () => {
     document.getElementById("testeMsg").textContent = "JS funcionando!";
