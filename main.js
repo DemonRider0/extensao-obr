@@ -1,5 +1,3 @@
-import OBR from "https://unpkg.com/@owlbear-rodeo/sdk?module";
-
 const EXTENSION_ID = "token-flip";
 
 function setStatus(msg, error = false) {
