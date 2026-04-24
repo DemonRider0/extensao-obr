@@ -1,93 +1,113 @@
+import OBR from "@owlbear-rodeo/sdk";
+
 const EXTENSION_ID = "token-flip";
 
 function setStatus(msg, error = false) {
   const status = document.getElementById("status");
+  if (!status) return;
+
   status.textContent = msg;
   status.style.color = error ? "#ff8080" : "#9fd29f";
 }
 
 async function getSelectedToken() {
   const items = await OBR.scene.items.getItems();
-  return items.find(i => i.selected);
+  return items.find(item => item.selected);
 }
 
 OBR.onReady(() => {
-  setStatus("Extensão pronta.");
+  console.log("Funcionando!");
 
   const frontInput = document.getElementById("frontUrl");
   const backInput = document.getElementById("backUrl");
   const saveBtn = document.getElementById("saveBtn");
   const flipBtn = document.getElementById("flipBtn");
-
-  // BOTÃO TESTE
   const testeBtn = document.getElementById("testeBtn");
   const testeMsg = document.getElementById("testeMsg");
 
+  setStatus("Extensão pronta.");
+
   if (testeBtn) {
-    testeBtn.onclick = () => {
+    testeBtn.addEventListener("click", () => {
       testeMsg.textContent = "JS funcionando!";
-    };
+    });
   }
 
-  // SALVAR
-  saveBtn.onclick = async () => {
-    const token = await getSelectedToken();
+  if (saveBtn) {
+    saveBtn.addEventListener("click", async () => {
+      try {
+        const token = await getSelectedToken();
 
-    if (!token) {
-      setStatus("Selecione um token.", true);
-      return;
-    }
+        if (!token) {
+          setStatus("Selecione um token.", true);
+          return;
+        }
 
-    const front = frontInput.value.trim();
-    const back = backInput.value.trim();
+        const front = frontInput.value.trim();
+        const back = backInput.value.trim();
 
-    if (!front || !back) {
-      setStatus("Preencha frente e verso.", true);
-      return;
-    }
+        if (!front || !back) {
+          setStatus("Preencha frente e verso.", true);
+          return;
+        }
 
-    await OBR.scene.items.updateItems([token.id], items => {
-      items.forEach(item => {
-        item.metadata[EXTENSION_ID] = {
-          front,
-          back,
-          flipped: false
-        };
-      });
+        await OBR.scene.items.updateItems([token.id], items => {
+          items.forEach(item => {
+            item.metadata[EXTENSION_ID] = {
+              front,
+              back,
+              flipped: false
+            };
+          });
+        });
+
+        setStatus("Imagens salvas.");
+      } catch (err) {
+        console.error(err);
+        setStatus("Erro ao salvar.", true);
+      }
     });
+  }
 
-    setStatus("Imagens salvas.");
-  };
+  if (flipBtn) {
+    flipBtn.addEventListener("click", async () => {
+      try {
+        const token = await getSelectedToken();
 
-  // FLIP
-  flipBtn.onclick = async () => {
-    const token = await getSelectedToken();
+        if (!token) {
+          setStatus("Selecione um token.", true);
+          return;
+        }
 
-    if (!token) {
-      setStatus("Selecione um token.", true);
-      return;
-    }
+        const data = token.metadata[EXTENSION_ID];
 
-    const data = token.metadata[EXTENSION_ID];
+        if (!data) {
+          setStatus("Token não configurado.", true);
+          return;
+        }
 
-    if (!data) {
-      setStatus("Token não configurado.", true);
-      return;
-    }
+        const flipped = !data.flipped;
+        const newUrl = flipped ? data.back : data.front;
 
-    const flipped = !data.flipped;
-    const newUrl = flipped ? data.back : data.front;
+        await OBR.scene.items.updateItems([token.id], items => {
+          items.forEach(item => {
+            item.image.url = newUrl;
+            item.metadata[EXTENSION_ID] = {
+              ...data,
+              flipped
+            };
+          });
+        });
 
-    await OBR.scene.items.updateItems([token.id], items => {
-      items.forEach(item => {
-        item.image.url = newUrl;
-        item.metadata[EXTENSION_ID] = {
-          ...data,
+        setStatus(
           flipped
-        };
-      });
+            ? "Virado para verso."
+            : "Virado para frente."
+        );
+      } catch (err) {
+        console.error(err);
+        setStatus("Erro ao flipar.", true);
+      }
     });
-
-    setStatus(flipped ? "Virado para verso." : "Virado para frente.");
-  };
+  }
 });
