@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Token Flip</title>
   <link rel="stylesheet" href="style.css">
-
-  <script src="https://unpkg.com/@owlbear-rodeo/sdk@latest/dist/index.umd.js"></script>
-  
 </head>
 
 <body>
@@ -15,20 +12,20 @@
 
   <div class="box">
     <label>Imagem Frente (URL)</label>
-    <input id="frontUrl" placeholder="Cole a URL da frente" />
+    <input id="frontUrl">
 
     <label>Imagem Verso (URL)</label>
-    <input id="backUrl" placeholder="Cole a URL do verso" />
+    <input id="backUrl">
 
-    <button id="saveBtn">Salvar no Token Selecionado</button>
+    <button id="saveBtn">Salvar</button>
   </div>
 
   <div class="box">
-    <button id="flipBtn">Flipar Token Selecionado</button>
+    <button id="flipBtn">Virar Token</button>
   </div>
 
   <div id="status">Aguardando...</div>
 
-  <script src="main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
