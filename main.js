@@ -8,7 +8,11 @@ const saveBtn = document.getElementById("saveBtn");
 const flipBtn = document.getElementById("flipBtn");
 const statusText = document.getElementById("status");
 
-alert("main.js carregado");
+window.onload = () => {
+  document.getElementById("testeBtn").addEventListener("click", () => {
+    document.getElementById("testeMsg").textContent = "JS funcionando!";
+  });
+};
 
 function setStatus(msg, error = false) {
   statusText.textContent = msg;
