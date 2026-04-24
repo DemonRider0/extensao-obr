@@ -1,48 +1,81 @@
-import OBR from "https://cdn.jsdelivr.net/npm/@owlbear-rodeo/sdk/+esm";
+const EXTENSION_ID = "token-flip";
 
-OBR.onReady(async () => {
-  console.log("Extensão Flip carregada");
+const frontInput = document.getElementById("frontUrl");
+const backInput = document.getElementById("backUrl");
+const saveBtn = document.getElementById("saveBtn");
+const flipBtn = document.getElementById("flipBtn");
+const statusText = document.getElementById("status");
 
-  // Registra ação no menu do item (token)
-  OBR.contextMenu.create({
-    id: "flip-token-action",
-    icons: [
-      {
-        icon: "https://demonrider0.github.io/extensao-obr/imagens/t20-icon.png",
-        label: "Flip Token",
-      },
-    ],
-    filter: (context) => {
-      // garante que só aparece em tokens selecionados
-      return context.items && context.items.length > 0;
-    },
-    onClick: async (context) => {
-      try {
-        const items = context.items;
+function setStatus(msg, error = false) {
+  statusText.textContent = msg;
+  statusText.style.color = error ? "#ff8080" : "#9fd29f";
+}
 
-        if (!items.length) {
-          await OBR.notification.show("Nenhum token selecionado.");
-          return;
-        }
+async function getSelectedToken() {
+  const items = await OBR.scene.items.getItems();
+  const selected = items.find(i => i.selected);
 
-        await OBR.scene.items.updateItems(
-          items.map(i => i.id),
-          (updated) => {
-            for (const item of updated) {
-              item.scale = item.scale || { x: 1, y: 1 };
+  if (!selected) {
+    setStatus("Nenhum token selecionado.", true);
+    return null;
+  }
 
-              // FLIP horizontal universal
-              item.scale.x *= -1;
-            }
-          }
-        );
+  return selected;
+}
 
-        await OBR.notification.show("Token flipado!");
+saveBtn.addEventListener("click", async () => {
+  const token = await getSelectedToken();
+  if (!token) return;
 
-      } catch (err) {
-        console.error(err);
-        await OBR.notification.show("Erro ao flipar token.");
-      }
+  const front = frontInput.value.trim();
+  const back = backInput.value.trim();
+
+  if (!front || !back) {
+    setStatus("Preencha as duas URLs.", true);
+    return;
+  }
+
+  await OBR.scene.items.updateItems([token.id], items => {
+    for (let item of items) {
+      item.metadata[EXTENSION_ID] = {
+        front,
+        back,
+        flipped: false
+      };
     }
   });
+
+  setStatus("Frente e verso salvos no token.");
+});
+
+flipBtn.addEventListener("click", async () => {
+  const token = await getSelectedToken();
+  if (!token) return;
+
+  const data = token.metadata[EXTENSION_ID];
+
+  if (!data) {
+    setStatus("Esse token não foi configurado.", true);
+    return;
+  }
+
+  const newFlipped = !data.flipped;
+  const newImage = newFlipped ? data.back : data.front;
+
+  await OBR.scene.items.updateItems([token.id], items => {
+    for (let item of items) {
+      item.image.url = newImage;
+
+      item.metadata[EXTENSION_ID] = {
+        ...data,
+        flipped: newFlipped
+      };
+    }
+  });
+
+  setStatus(newFlipped ? "Token virou para o verso." : "Token voltou para frente.");
+});
+
+OBR.onReady(() => {
+  setStatus("Extensão pronta.");
 });
