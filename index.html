@@ -1,18 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Teste</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Token Flip</title>
   <link rel="stylesheet" href="style.css">
-</head>
-<body>
 
-  <div class="container">
-    <h1>Extensão Teste</h1>
-    <button id="btn">🔄 Flip Token</button>
+  <script src="https://unpkg.com/@owlbear-rodeo/sdk@latest/dist/index.umd.js"></script>
+  
+</head>
+
+<body>
+  <h1>Token Flip</h1>
+
+  <div class="box">
+    <label>Imagem Frente (URL)</label>
+    <input id="frontUrl" placeholder="Cole a URL da frente" />
+
+    <label>Imagem Verso (URL)</label>
+    <input id="backUrl" placeholder="Cole a URL do verso" />
+
+    <button id="saveBtn">Salvar no Token Selecionado</button>
   </div>
 
-<script type="module" src="main.js"></script>
+  <div class="box">
+    <button id="flipBtn">Flipar Token Selecionado</button>
+  </div>
 
+  <div id="status">Aguardando...</div>
+
+  <script src="main.js"></script>
 </body>
 </html>
