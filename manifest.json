@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "manifest_version": 1,
   "author": "DemonRider",
-  "icon": "/icon.png",
+  "icon": "https://demonrider0.github.io/extensao-obr/imagens/t20-icon.png",
   "homepage_url": "",
   "description": "Adiciona uma opção para alternar entre frente e verso de tokens no Owlbear Rodeo.",
   "action": {
